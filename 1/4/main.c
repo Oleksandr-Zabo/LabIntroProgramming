@@ -1,11 +1,8 @@
 #include <stdio.h>
-
-
 void change_even_to_char(char *str, char ch) {
-	if (!str) return;
-	for (int i = 1; str[i] != '\0'; i += 2) {
-		str[i] = ch;
-	}
+	if (!str || str[0] == '\0' || str[1] == '\0') return;
+	str[1] = ch;
+	change_even_to_char(str + 2, ch);
 }
 
 int main() {

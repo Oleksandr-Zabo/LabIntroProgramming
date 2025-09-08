@@ -1,14 +1,15 @@
 #include <stdio.h>
 
 int main() {
-	int i;
-	for (i = 100; i <= 999; i++) {
-		int a = i / 100;           
-		int b = (i / 10) % 10;     
-		int c = i % 10;           
-		if (i == (a*a*a + b*b*b + c*c*c)) {
-			printf("%d\n", i);
+	int n;
+	printf("Enter an integer: ");
+	scanf("%d", &n);
+	printf("Divisors of %d: ", n);
+	for (int i = 1; i <= n; i++) {
+		if (n % i == 0) {
+			printf("%d ", i);
 		}
 	}
+	printf("\n");
 	return 0;
 }
