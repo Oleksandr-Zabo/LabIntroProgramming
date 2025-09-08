@@ -1,73 +1,60 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-// Програма для обчислення (A-E)*b
+#define MAX_N 20
+
 int main() {
-	int N, i, j;
-	printf("Введіть розмір квадратної матриці n: ");
-	scanf("%d", &N);
-	const int n = N;
+    int n;
+    float A[MAX_N][MAX_N], E[MAX_N][MAX_N], C[MAX_N][MAX_N], b[MAX_N], result[MAX_N];
 
-	float A[n][n]; // Матриця A
-	float E[n][n]; // Одинична матриця E
-	float b[n];    // Вектор b
-	float C[n][n]; // Матриця C = A - E
-	float result[n]; // Результуючий вектор
-
-	srand(time(NULL));
-
-	// Генеруємо матрицю A та вектор b
-	printf("Матриця A:\n");
-	for (i = 0; i < n; i++) {
-		for (j = 0; j < n; j++) {
-			A[i][j] = rand() % 10; // випадкові числа 0-9
-			printf("%5.1f ", A[i][j]);
-		}
-		printf("\n");
+    printf("Enter max size of square matrix (1-%d): ", MAX_N);
+    scanf("%d", &n);
+	if (n < 1 || n > MAX_N) {
+		printf("Invalid size. Please enter a number between 1 and %d.\n", MAX_N);
+		return 1;
 	}
 
-	printf("Вектор b:\n");
-	for (i = 0; i < n; i++) {
-		b[i] = rand() % 10;
-		printf("%5.1f ", b[i]);
-	}
-	printf("\n");
+    srand(time(NULL));
 
-	// Створюємо одиничну матрицю E
-	for (i = 0; i < n; i++) {
-		for (j = 0; j < n; j++) {
-			E[i][j] = (i == j) ? 1 : 0;
-		}
-	}
+    // Filling matrix A
+    printf("Matrix A:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            A[i][j] = rand() % 10;
+            printf("%5.1f ", A[i][j]);
+        }
+        printf("\n");
+    }
 
-	// Обчислюємо C = A - E
-	for (i = 0; i < n; i++) {
-		for (j = 0; j < n; j++) {
-			C[i][j] = A[i][j] - E[i][j];
-		}
-	}
+    // Filling vector b
+    printf("Vector b:\n");
+    for (int i = 0; i < n; i++) {
+        b[i] = rand() % 10;
+        printf("%5.1f ", b[i]);
+    }
+    printf("\n");
 
-	// Множимо матрицю C на вектор b: result[i] = sum_j(C[i][j] * b[j])
-	for (i = 0; i < n; i++) {
-		result[i] = 0;
-		for (j = 0; j < n; j++) {
-			result[i] += C[i][j] * b[j];
-		}
-	}
+    // Identity matrix E
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            E[i][j] = (i == j) ? 1 : 0;
 
-	printf("Результат (A-E)*b:\n");
-	for (i = 0; i < n; i++) {
-		printf("%8.2f\n", result[i]);
-	}
+    // C = A - E
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            C[i][j] = A[i][j] - E[i][j];
 
-	// Пояснення:
-	// 1. Вектор — це масив з n елементів (одновимірний).
-	// 2. Матриця — це масив з n*n елементів (двовимірний).
-	// 3. Одинична матриця має 1 на головній діагоналі, 0 — в інших місцях.
-	// 4. Віднімання матриць — елементно: C[i][j] = A[i][j] - E[i][j].
-	// 5. Множення матриці на вектор — скалярний добуток рядка матриці на вектор.
+    // result = C * b
+    for (int i = 0; i < n; i++) {
+        result[i] = 0;
+        for (int j = 0; j < n; j++)
+            result[i] += C[i][j] * b[j];
+    }
 
-	return 0;
+    printf("Result (A-E)*b:\n");
+    for (int i = 0; i < n; i++)
+        printf("%8.2f\n", result[i]);
+
+    return 0;
 }
