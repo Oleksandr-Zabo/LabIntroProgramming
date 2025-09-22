@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
+#include <windows.h>
 
 #define MAX_APPLICANTS 100
 #define MAX_SPECIALTIES 10
@@ -25,7 +27,7 @@ int applicant_count = 0, specialty_count = 0;
 
 void read_applicants(const char *filename) {
     FILE *f = fopen(filename, "r");
-    if (!f) { printf("File not found\n"); exit(1); }
+    if (!f) { printf("Файл не знайдено\n"); exit(1); }
     while (fscanf(f, "%49[^,],%9[^,],%d,%d,%d\n",
                   applicants[applicant_count].surname,
                   applicants[applicant_count].specialty,
@@ -57,11 +59,19 @@ void get_specialty_info() {
         }
     }
     for (int i = 0; i < specialty_count; i++) {
-        printf("Specialty code: %s\n", specialties[i].specialty);
-        printf("Passing score: ");
-        scanf("%d", &specialties[i].passing_score);
-        printf("Number of places: ");
-        scanf("%d", &specialties[i].places);
+        printf("Код спеціальності: %s\n", specialties[i].specialty);
+        printf("Прохідний бал: ");
+        fflush(stdout);
+        if (scanf("%d", &specialties[i].passing_score) != 1) {
+            printf("Помилка вводу прохідного балу!\n");
+            exit(1);
+        }
+        printf("Кількість місць: ");
+        fflush(stdout);
+        if (scanf("%d", &specialties[i].places) != 1) {
+            printf("Помилка вводу кількості місць!\n");
+            exit(1);
+        }
     }
 }
 
@@ -84,7 +94,7 @@ void process_and_save(const char *filename) {
                     Applicant tmp = eligible[i]; eligible[i] = eligible[j]; eligible[j] = tmp;
                 }
         
-        fprintf(f, "Specialty: %s\n", specialties[s].specialty);
+        fprintf(f, "Спеціальність: %s\n", specialties[s].specialty);
         for (int i = 0; i < count && i < specialties[s].places; i++)
             fprintf(f, "%s,%s,%.2f\n", eligible[i].surname, eligible[i].specialty, eligible[i].avg);
     }
@@ -92,9 +102,13 @@ void process_and_save(const char *filename) {
 }
 
 int main() {
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    setlocale(LC_ALL, "Ukrainian");
+    
     read_applicants("input.csv");
     get_specialty_info();
     process_and_save("result.csv");
-    printf("Results saved to result.csv\n");
+    printf("Результати збережено у файл result.csv\n");
     return 0;
 }
